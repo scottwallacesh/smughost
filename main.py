@@ -1,19 +1,6 @@
 #!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+"""Class to handle the main page of the site."""
+
 import sys
 sys.path.append("lib/external/smugpy/src/")
 
@@ -25,16 +12,24 @@ from google.appengine.ext.webapp import util
 from smugpy import SmugMug
 
 class MainHandler(webapp.RequestHandler):
+    """Class to handle the main webapp functionality."""
     def get(self):
+        """Fuction to handle GET requests."""
+
+        # Fetch the user object
         user = users.get_current_user()
+
+        # Are we logged in?
         if user is None:
             # Nope.  Go login.
             self.redirect(users.create_login_url(self.request.path))
             return
 
-        prefs = UserPrefs().fetch()
+        prefs = UserPrefs().fetch(user.user_id())
+
+        # Check to see if the user preferences object has anything of value in it
         if not getattr(prefs, "api_key"):
-            # Display a form to capture the data
+            # Nope.  Display a simple form to capture the data
             self.response.out.write("""
             <html>
                 <head>
@@ -43,11 +38,11 @@ class MainHandler(webapp.RequestHandler):
                 <body>
                     <form action="/prefs" method="post">
                         <label for="api_key">SmugMug API Key</label>
-                        <input type="text" id="api_key" name="api_key" />
+                        <input type="text" id="api_key" name="api_key" /> <br/>
                         <label for="nickname">SmugMug Username</label>
-                        <input type="text" id="nickname" name="nickname" />
+                        <input type="text" id="nickname" name="nickname" /> <br/>
                         <label for="app_name">SmugMug API App Name</label>
-                        <input type="text" id="app_name" name="app_name" />
+                        <input type="text" id="app_name" name="app_name" /> <br/>
 
                         <input type="submit" value="submit" />
                     </form>
@@ -62,10 +57,11 @@ class MainHandler(webapp.RequestHandler):
             smugmug.login_anonymously()
             albums = smugmug.albums_get(NickName=prefs.nickname)
         except Exception, e:
+            # Hmmm... something's not right.
             self.response.out.write("There was a problem connecting to SmugMug: %s" % e)
             return
 
-        # List te albums
+        # List the albums
         for album in albums["Albums"]:
             self.response.out.write("%s, %s<br/>" % (album["id"], album["Title"]))
 

@@ -1,19 +1,9 @@
 #!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+"""Class to store and retrieve user preferences."""
+
+__version__ = "1.0"
+__author__ = "Scott Wallace <scott@wallace.sh>"
+
 from google.appengine.ext import db,webapp
 from google.appengine.ext.webapp import util
 from google.appengine.api import users
@@ -50,20 +40,28 @@ class UserPrefs(db.Model):
         return userprefs
 
 class PrefHandler(webapp.RequestHandler):
+    """Preferences handler."""
     def post(self):
-
+        # Fetch our preferences object
         prefs = UserPrefs().fetch()
+
         try:
+            # Set the variables from the form
             prefs.api_key = self.request.get("api_key")
             prefs.nickname = self.request.get("nickname")
             prefs.app_name = self.request.get("app_name")
+
+            # Push the changes to the DB.
             prefs.put()
         except Exception, e:
-            pass
+            # Oops.  An error.
+            self.response.out.write("There was an error storing the preferences: %s" % e)
+            return
 
         self.redirect("/")
 
 def main():
+    """Main function for executing the script."""
     application = webapp.WSGIApplication([('/prefs', PrefHandler)],
                                          debug=True)
     util.run_wsgi_app(application)
