@@ -1,0 +1,11 @@
+.album, .image {
+    float: left;
+    display: block;
+    width: 10em;
+    height: 10em;
+}
+
+.album h1 {
+    font-size: 0.8em;
+    white-space: wrap;
+}
