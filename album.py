@@ -21,18 +21,7 @@ class MainHandler(webapp.RequestHandler):
 
         # Check to see if the user preferences object has anything of value in it
         if not getattr(prefs, "api_key"):
-            # Nope.  Display a simple page to explain.
-            self.response.out.write("""
-            <html>
-                <head>
-                    <title>Not configured</title>
-                </head>
-                <body>
-                    <h1>The application is not yet configured.</h1>
-                    <p>This application is not yet configured.  The administrator should visit, <a href="/prefs">/prefs</a> to configure it.</p>
-                </body>
-            </html>
-            """)
+            self.redirect("/static/unconfig.html")
             return
 
         # So far, so good.  Try connecting to SmugMug.
@@ -47,12 +36,12 @@ class MainHandler(webapp.RequestHandler):
         # Main logic loop to display albums, images, etc.
         # List the albums.
         for image in images["Album"]["Images"]:
-           imageURL = smugmug.images_getURLs(ImageID=image["id"], ImageKey=image["Key"])["Image"]
-           self.response.out.write("""<div class="image">""")
-           self.response.out.write("""<a href="%s">""" % (imageURL["MediumURL"]))
-           self.response.out.write("""<img src="%s" />""" % (imageURL["ThumbURL"]))
-           self.response.out.write("""</a>""")
-           self.response.out.write("""</div>\n""")
+            imageURL = smugmug.images_getURLs(ImageID=image["id"], ImageKey=image["Key"])["Image"]
+            self.response.out.write("""<div class="image">""")
+            self.response.out.write("""<a href="%s">""" % (imageURL["MediumURL"]))
+            self.response.out.write("""<img src="%s" />""" % (imageURL["ThumbURL"]))
+            self.response.out.write("""</a>""")
+            self.response.out.write("""</div>\n""")
 
 def main():
     application = webapp.WSGIApplication([(r"/album/(.*)/(.*)", MainHandler)],

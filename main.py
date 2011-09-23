@@ -21,18 +21,7 @@ class MainHandler(webapp.RequestHandler):
 
         # Check to see if the user preferences object has anything of value in it
         if not getattr(prefs, "api_key"):
-            # Nope.  Display a simple page to explain.
-            self.response.out.write("""
-            <html>
-                <head>
-                    <title>Not configured</title>
-                </head>
-                <body>
-                    <h1>The application is not yet configured.</h1>
-                    <p>This application is not yet configured.  The administrator should visit, <a href="/prefs">/prefs</a> to configure it.</p>
-                </body>
-            </html>
-            """)
+            self.redirect("/static/unconfig.html")
             return
 
         # So far, so good.  Try connecting to SmugMug.
@@ -52,12 +41,6 @@ class MainHandler(webapp.RequestHandler):
            self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&Size=Tiny&AlbumKey=%s" />""" % (prefs.nickname, album["id"], album["Key"]))
            self.response.out.write("""</a>""")
            self.response.out.write("""</div>""")
-
-       # -- IMAGES 
-       #     images = smugmug.images_get(AlbumID=album["id"], AlbumKey=album["Key"])
-       #     for image in images["Album"]["Images"]:
-       #         print image
-       #         self.response.out.write("%s, %s, %s<br/>" % (album["id"], album["Title"], image["id"]))
 
 def main():
     application = webapp.WSGIApplication([('/', MainHandler)],
