@@ -15,12 +15,13 @@ class MainHandler(webapp.RequestHandler):
     """Class to handle the main webapp functionality."""
     def get(self):
         """Fuction to handle GET requests."""
+
         # Fetch the application settings
         prefs = AppPrefs().fetch()
 
         # Check to see if the user preferences object has anything of value in it
         if not getattr(prefs, "api_key"):
-            # Nope.  Display a simple form to explain
+            # Nope.  Display a simple page to explain.
             self.response.out.write("""
             <html>
                 <head>
@@ -28,7 +29,7 @@ class MainHandler(webapp.RequestHandler):
                 </head>
                 <body>
                     <h1>The application is not yet configured.</h1>
-                    <p>This webapp is not yet configured.</p>
+                    <p>This application is not yet configured.  The administrator should visit, <a href="/prefs">/prefs</a> to configure it.</p>
                 </body>
             </html>
             """)
@@ -44,7 +45,8 @@ class MainHandler(webapp.RequestHandler):
             self.response.out.write("There was a problem connecting to SmugMug: %s" % e)
             return
 
-        # List the albums
+        # Main logic loop to display albums, photos, etc.
+        # List the albums.
         for album in albums["Albums"]:
             self.response.out.write("%s, %s<br/>" % (album["id"], album["Title"]))
 
