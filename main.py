@@ -37,8 +37,7 @@ class MainHandler(webapp.RequestHandler):
 
         # So far, so good.  Try connecting to SmugMug.
         try:
-            smugmug = SmugMug(api_key=prefs.api_key, app_name=prefs.app_name)
-            smugmug.login_anonymously()
+            smugmug = SmugMug(api_key=prefs.api_key, api_version="1.3.0", app_name=prefs.app_name)
             albums = smugmug.albums_get(NickName=prefs.nickname)
         except Exception, e:
             # Hmmm... something's not right.
