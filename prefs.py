@@ -6,23 +6,24 @@ from google.appengine.ext.webapp import util
 from google.appengine.api import users
 
 class AppPrefs(db.Model):
-    """Class to fetch and store user preferences."""
-    api_key = db.StringProperty(default="")
-    nickname = db.StringProperty(default="")
-    app_name = db.StringProperty(default="")
+     """Class to fetch and store user preferences."""
+     api_key = db.StringProperty(default="")
+     nickname = db.StringProperty(default="")
+     app_name = db.StringProperty(default="")
+     category = db.IntegerProperty(default=0)
 
-    def fetch(self):
-        """Function to fetch the application preferences."""
-        # Get the key from the DB.
-        key = db.Key.from_path("AppPrefs", "AppPrefs")
-        appPrefs = db.get(key)
+     def fetch(self):
+         """Function to fetch the application preferences."""
+         # Get the key from the DB.
+         key = db.Key.from_path("AppPrefs", "AppPrefs")
+         appPrefs = db.get(key)
 
-        # Check for data.
-        if appPrefs is None:
-            # None.  Create an entry.
-            appPrefs = AppPrefs(key_name="AppPrefs")
+         # Check for data.
+         if appPrefs is None:
+             # None.  Create an entry.
+             appPrefs = AppPrefs(key_name="AppPrefs")
 
-        return appPrefs
+         return appPrefs
 
 class PrefHandler(webapp.RequestHandler):
     """Preferences handler."""
@@ -45,12 +46,14 @@ class PrefHandler(webapp.RequestHandler):
                         <input type="text" id="nickname" name="nickname" value="%s" /> <br/>
                         <label for="app_name">SmugMug API App Name</label>
                         <input type="text" id="app_name" name="app_name" value="%s" /> <br/>
+                        <label for="category">SmugMug Category</label>
+                        <input type="text" id="category" name="category" value="%s" /> <br/>
 
                         <input type="submit" value="submit" />
                     </form>
                 </body>
             </html>
-            """ % (prefs.api_key, prefs.nickname, prefs.app_name))
+            """ % (prefs.api_key, prefs.nickname, prefs.app_name, prefs.category))
         return
 
 
@@ -64,6 +67,7 @@ class PrefHandler(webapp.RequestHandler):
             prefs.api_key = self.request.get("api_key")
             prefs.nickname = self.request.get("nickname")
             prefs.app_name = self.request.get("app_name")
+            prefs.category = self.request.get("category")
 
             # Push the changes to the DB.
             prefs.put()
