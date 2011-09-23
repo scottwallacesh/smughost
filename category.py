@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-"""Class to handle the main page of the site."""
 
 import sys
 sys.path.append("lib/external/smugpy/src/")
@@ -11,11 +10,15 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from smugpy import SmugMug
 
+import xhtml
+
 class MainHandler(webapp.RequestHandler):
      """Class to handle the main webapp functionality."""
      def get(self, categoryID):
          """Fuction to handle GET requests."""
  
+         html = xhtml.HTML(self)
+
          # Fetch the application settings
          prefs = AppPrefs().fetch()
  
@@ -23,6 +26,8 @@ class MainHandler(webapp.RequestHandler):
          if not getattr(prefs, "api_key"):
              self.redirect("/static/unconfig.html")
              return
+
+         html.header()
  
          # So far, so good.  Try connecting to SmugMug.
          try:
@@ -43,6 +48,8 @@ class MainHandler(webapp.RequestHandler):
                  self.response.out.write("""</a>""")
                  self.response.out.write("""<h1>%s</h1>""" % (album["Title"]))
                  self.response.out.write("""</div>""")
+
+         html.footer()
 
 def main():
     application = webapp.WSGIApplication([('/category/(.*)', MainHandler)],

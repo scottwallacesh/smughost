@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-"""Class to store and retrieve user preferences."""
 
 from google.appengine.ext import db,webapp
 from google.appengine.ext.webapp import util
 from google.appengine.api import users
+
+import xhtml
 
 class AppPrefs(db.Model):
      """Class to fetch and store user preferences."""
@@ -28,16 +29,14 @@ class AppPrefs(db.Model):
 class PrefHandler(webapp.RequestHandler):
     """Preferences handler."""
     def get(self):
+        html = xhtml.HTML(self)
+
         # Fetch any existing preferences.
         prefs = AppPrefs().fetch()
 
         # Display a form to add/update the application settings.
+        html.header(title="Preferences")
         self.response.out.write("""
-            <html>
-                <head>
-                    <title>Edit prefs</title>
-                </head>
-                <body>
                     <h1>Edit preferences</h1>
                     <form action="/prefs" method="post">
                         <label for="api_key">SmugMug API Key</label>
@@ -51,14 +50,12 @@ class PrefHandler(webapp.RequestHandler):
 
                         <input type="submit" value="submit" />
                     </form>
-                </body>
-            </html>
             """ % (prefs.api_key, prefs.nickname, prefs.app_name, prefs.category))
-        return
-
+        html.footer()
 
     def post(self):
         """Function to store the settings provided in the <form ...> in the get() function."""
+
         # Fetch our preferences object
         prefs = AppPrefs().fetch()
 
