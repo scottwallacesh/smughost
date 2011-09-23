@@ -4,7 +4,7 @@
 import sys
 sys.path.append("lib/external/smugpy/src/")
 
-from prefs import UserPrefs
+from prefs import AppPrefs
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -15,37 +15,20 @@ class MainHandler(webapp.RequestHandler):
     """Class to handle the main webapp functionality."""
     def get(self):
         """Fuction to handle GET requests."""
-
-        # Fetch the user object
-        user = users.get_current_user()
-
-        # Are we logged in?
-        if user is None:
-            # Nope.  Go login.
-            self.redirect(users.create_login_url(self.request.path))
-            return
-
-        prefs = UserPrefs().fetch(user.user_id())
+        # Fetch the application settings
+        prefs = AppPrefs().fetch()
 
         # Check to see if the user preferences object has anything of value in it
         if not getattr(prefs, "api_key"):
-            # Nope.  Display a simple form to capture the data
+            # Nope.  Display a simple form to explain
             self.response.out.write("""
             <html>
                 <head>
-                    <title>Edit prefs</title>
+                    <title>Not configured</title>
                 </head>
                 <body>
-                    <form action="/prefs" method="post">
-                        <label for="api_key">SmugMug API Key</label>
-                        <input type="text" id="api_key" name="api_key" /> <br/>
-                        <label for="nickname">SmugMug Username</label>
-                        <input type="text" id="nickname" name="nickname" /> <br/>
-                        <label for="app_name">SmugMug API App Name</label>
-                        <input type="text" id="app_name" name="app_name" /> <br/>
-
-                        <input type="submit" value="submit" />
-                    </form>
+                    <h1>The application is not yet configured.</h1>
+                    <p>This webapp is not yet configured.</p>
                 </body>
             </html>
             """)

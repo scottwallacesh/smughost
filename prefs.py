@@ -1,49 +1,58 @@
 #!/usr/bin/env python
 """Class to store and retrieve user preferences."""
 
-__version__ = "1.0"
-__author__ = "Scott Wallace <scott@wallace.sh>"
-
 from google.appengine.ext import db,webapp
 from google.appengine.ext.webapp import util
 from google.appengine.api import users
 
-class UserPrefs(db.Model):
+class AppPrefs(db.Model):
     """Class to fetch and store user preferences."""
     api_key = db.StringProperty(default="")
     nickname = db.StringProperty(default="")
     app_name = db.StringProperty(default="")
 
-    def fetch(self, user_id=None):
-        """Function to store the user's preferences based on their user_id()."""
-
-        # Check for a user ID.
-        if user_id is None:
-            # Check to see if we're logged in.
-            user = users.get_current_user()
-            if user is None:
-                # Nope.
-                return None
-
-            # Fetch the user ID.
-            user_id = user.user_id()
-
+    def fetch(self):
+        """Function to fetch the app's preferences."""
         # Get the key from the DB.
-        key = db.Key.from_path("UserPrefs", user_id)
-        userprefs = db.get(key)
+        key = db.Key.from_path("AppPrefs", "AppPrefs")
+        appPrefs = db.get(key)
 
         # Check for data.
-        if userprefs is None:
+        if appPrefs is None:
             # None.  Create an entry.
-            userprefs = UserPrefs(key_name=user_id)
+            appPrefs = AppPrefs(key_name="AppPrefs")
 
-        return userprefs
+        return appPrefs
 
 class PrefHandler(webapp.RequestHandler):
     """Preferences handler."""
+    def get(self):
+        prefs = AppPrefs().fetch()
+        self.response.out.write("""
+            <html>
+                <head>
+                    <title>Edit prefs</title>
+                </head>
+                <body>
+                    <form action="/prefs" method="post">
+                        <label for="api_key">SmugMug API Key</label>
+                        <input type="text" id="api_key" name="api_key" value="%s" /> <br/>
+                        <label for="nickname">SmugMug Username</label>
+                        <input type="text" id="nickname" name="nickname" value="%s" /> <br/>
+                        <label for="app_name">SmugMug API App Name</label>
+                        <input type="text" id="app_name" name="app_name" value="%s" /> <br/>
+
+                        <input type="submit" value="submit" />
+                    </form>
+                </body>
+            </html>
+            """ % (prefs.api_key, prefs.nickname, prefs.app_name))
+        return
+
+
     def post(self):
         # Fetch our preferences object
-        prefs = UserPrefs().fetch()
+        prefs = AppPrefs().fetch()
 
         try:
             # Set the variables from the form

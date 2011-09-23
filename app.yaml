@@ -6,7 +6,7 @@ api_version: 1
 handlers:
 - url: /prefs
   script: prefs.py
-  login: required
+  login: admin
 
 - url: .*
   script: main.py
