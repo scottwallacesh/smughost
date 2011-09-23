@@ -13,7 +13,7 @@ from smugpy import SmugMug
 
 class MainHandler(webapp.RequestHandler):
     """Class to handle the main webapp functionality."""
-    def get(self):
+    def get(self, albumID, albumKey):
         """Fuction to handle GET requests."""
 
         # Fetch the application settings
@@ -38,7 +38,7 @@ class MainHandler(webapp.RequestHandler):
         # So far, so good.  Try connecting to SmugMug.
         try:
             smugmug = SmugMug(api_key=prefs.api_key, api_version="1.3.0", app_name=prefs.app_name)
-            albums = smugmug.albums_get(NickName=prefs.nickname)
+            images = smugmug.images_get(AlbumID=albumID, AlbumKey=albumKey)
         except Exception, e:
             # Hmmm... something's not right.
             self.response.out.write("There was a problem connecting to SmugMug: %s" % e)
@@ -46,21 +46,16 @@ class MainHandler(webapp.RequestHandler):
 
         # Main logic loop to display albums, images, etc.
         # List the albums.
-        for album in albums["Albums"]:
-           self.response.out.write("""<div class="album">""")
-           self.response.out.write("""<a href="/album/%s/%s">""" % (album["id"], album["Key"]))
-           self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&Size=Tiny&AlbumKey=%s" />""" % (prefs.nickname, album["id"], album["Key"]))
+        for image in images["Album"]["Images"]:
+           imageURL = smugmug.images_getURLs(ImageID=image["id"], ImageKey=image["Key"])["Image"]
+           self.response.out.write("""<div class="image">""")
+           self.response.out.write("""<a href="%s">""" % (imageURL["MediumURL"]))
+           self.response.out.write("""<img src="%s" />""" % (imageURL["ThumbURL"]))
            self.response.out.write("""</a>""")
-           self.response.out.write("""</div>""")
-
-       # -- IMAGES 
-       #     images = smugmug.images_get(AlbumID=album["id"], AlbumKey=album["Key"])
-       #     for image in images["Album"]["Images"]:
-       #         print image
-       #         self.response.out.write("%s, %s, %s<br/>" % (album["id"], album["Title"], image["id"]))
+           self.response.out.write("""</div>\n""")
 
 def main():
-    application = webapp.WSGIApplication([('/', MainHandler)],
+    application = webapp.WSGIApplication([(r"/album/(.*)/(.*)", MainHandler)],
                                          debug=True)
     util.run_wsgi_app(application)
 

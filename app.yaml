@@ -8,5 +8,8 @@ handlers:
   script: prefs.py
   login: admin
 
+- url: /album/.*
+  script: album.py
+
 - url: .*
   script: main.py
