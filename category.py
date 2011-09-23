@@ -13,7 +13,7 @@ from smugpy import SmugMug
 
 class MainHandler(webapp.RequestHandler):
      """Class to handle the main webapp functionality."""
-     def get(self):
+     def get(self, categoryID):
          """Fuction to handle GET requests."""
  
          # Fetch the application settings
@@ -23,15 +23,10 @@ class MainHandler(webapp.RequestHandler):
          if not getattr(prefs, "api_key"):
              self.redirect("/static/unconfig.html")
              return
-
-         if getattr(prefs, "category"):
-             self.redirect("/category/%s" % prefs.category)
-             return
  
          # So far, so good.  Try connecting to SmugMug.
          try:
              smugmug = SmugMug(api_key=prefs.api_key, api_version="1.3.0", app_name=prefs.app_name)
-             categories = smugmug.categories_get(NickName=prefs.nickname)
              albums = smugmug.albums_get(NickName=prefs.nickname)
          except Exception, e:
              # Hmmm... something's not right.
@@ -40,24 +35,17 @@ class MainHandler(webapp.RequestHandler):
  
          # Main logic loop to display albums, images, etc.
          # List the albums.
-         for category in categories["Categories"]:
-             for album in albums["Albums"]:
-                 count = 0
-                 if album["Category"]["id"] == category["id"]:
-                     count += 1
-
-                 if count > 0:
-                     self.response.out.write("""<div class="category">""")
-                     self.response.out.write("""<a href="/category/%s">""" % (category["id"]))
-                     self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&AlbumKey=%s&Size=Thumb" />""" % (prefs.nickname, album["id"], album["Key"]))
-                     self.response.out.write("""</a>""")
-                     self.response.out.write("""<h1>%s</h1>""" % (category["NiceName"]))
-                     self.response.out.write("""</div>""")
-
-                     break;
+         for album in albums["Albums"]:
+             if album["Category"]["id"] == int(categoryID):
+                 self.response.out.write("""<div class="album">""")
+                 self.response.out.write("""<a href="/album/%s/%s">""" % (album["id"], album["Key"]))
+                 self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&Size=Tiny&AlbumKey=%s" />""" % (prefs.nickname, album["id"], album["Key"]))
+                 self.response.out.write("""</a>""")
+                 self.response.out.write("""<h1>%s</h1>""" % (album["Title"]))
+                 self.response.out.write("""</div>""")
 
 def main():
-    application = webapp.WSGIApplication([('/', MainHandler)],
+    application = webapp.WSGIApplication([('/category/(.*)', MainHandler)],
                                          debug=True)
     util.run_wsgi_app(application)
 

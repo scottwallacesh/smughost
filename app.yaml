@@ -11,6 +11,9 @@ handlers:
   script: prefs.py
   login: admin
 
+- url: /category/.*
+  script: category.py
+
 - url: /album/.*
   script: album.py
 

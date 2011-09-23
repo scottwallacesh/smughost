@@ -36,11 +36,13 @@ class MainHandler(webapp.RequestHandler):
         # Main logic loop to display albums, images, etc.
         # List the albums.
         for image in images["Album"]["Images"]:
-            imageURL = smugmug.images_getURLs(ImageID=image["id"], ImageKey=image["Key"])["Image"]
+            imageInfo = smugmug.images_getInfo(ImageID=image["id"], ImageKey=image["Key"])["Image"]
             self.response.out.write("""<div class="image">""")
-            self.response.out.write("""<a href="%s">""" % (imageURL["MediumURL"]))
-            self.response.out.write("""<img src="%s" />""" % (imageURL["ThumbURL"]))
+            self.response.out.write("""<a href="%s">""" % (imageInfo["MediumURL"]))
+            self.response.out.write("""<img src="%s" />""" % (imageInfo["ThumbURL"]))
             self.response.out.write("""</a>""")
+            self.response.out.write("""<h3>%s</h3>""" % (imageInfo["Caption"]))
+
             self.response.out.write("""</div>\n""")
 
 def main():

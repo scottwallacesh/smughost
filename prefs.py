@@ -67,7 +67,7 @@ class PrefHandler(webapp.RequestHandler):
             prefs.api_key = self.request.get("api_key")
             prefs.nickname = self.request.get("nickname")
             prefs.app_name = self.request.get("app_name")
-            prefs.category = self.request.get("category")
+            prefs.category = int(self.request.get("category"))
 
             # Push the changes to the DB.
             prefs.put()
