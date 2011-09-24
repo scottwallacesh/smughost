@@ -1,11 +1,21 @@
 .album, .image {
     float: left;
     display: block;
+    margin: 1em;
+    border: 1px solid black;
     width: 10em;
     height: 10em;
+    overflow: hidden;
 }
 
-.album h1 {
+.album img, .image img {
+    display: block;
+    margin: 0.5em auto 0.5em auto;
+    max-width: 9em;
+}
+
+.album h1, .image h3 {
     font-size: 0.8em;
     white-space: wrap;
+    margin: 1em;
 }
