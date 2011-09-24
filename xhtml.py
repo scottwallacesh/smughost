@@ -14,7 +14,7 @@ class HTML:
 <body>
     <div id="wrap">
         <div id="header"></div>
-        <div id="nav"><a href="/">Home</a></div>
+        <div id="nav"><a href="/">Photos</a></div>
         <div id="content">
 \n""" % (title))
 
