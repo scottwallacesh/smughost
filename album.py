@@ -43,7 +43,7 @@ class MainHandler(webapp.RequestHandler):
             imageInfo = smugmug.images_getInfo(ImageID=image["id"], ImageKey=image["Key"])["Image"]
             self.response.out.write("""<div class="image">""")
             self.response.out.write("""<a href="%s">""" % (imageInfo["MediumURL"]))
-            self.response.out.write("""<img src="%s" />""" % (imageInfo["ThumbURL"]))
+            self.response.out.write("""<img src="%s" alt="%s" />""" % (imageInfo["TinyURL"], imageInfo["Caption"]))
             self.response.out.write("""</a>""")
             self.response.out.write("""<h3>%s</h3>""" % (imageInfo["Caption"]))
 

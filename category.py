@@ -44,10 +44,10 @@ class MainHandler(webapp.RequestHandler):
              if album["Category"]["id"] == int(categoryID):
                  self.response.out.write("""<div class="album">""")
                  self.response.out.write("""<a href="/album/%s/%s">""" % (album["id"], album["Key"]))
-                 self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&Size=Tiny&AlbumKey=%s" />""" % (prefs.nickname, album["id"], album["Key"]))
+                 self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&Size=Tiny&AlbumKey=%s" alt="%s" />""" % (prefs.nickname, album["id"], album["Key"], album["Title"]))
                  self.response.out.write("""</a>""")
                  self.response.out.write("""<h1>%s</h1>""" % (album["Title"]))
-                 self.response.out.write("""</div>""")
+                 self.response.out.write("""</div>\n""")
 
          html.footer()
 

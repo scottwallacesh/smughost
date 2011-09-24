@@ -11,7 +11,7 @@ class HTML:
     <title>%s</title>
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
 </head>
-<body>""" % (title))
+<body>\n""" % (title))
 
     def footer(self):
         self.response.out.write("""</body>
