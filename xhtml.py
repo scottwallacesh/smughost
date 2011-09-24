@@ -10,6 +10,13 @@ class HTML:
 <head>
     <title>%s</title>
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+
+    <!-- Lightbox2: http://www.lokeshdhakar.com/projects/lightbox2/ -->
+    <script type="text/javascript" src="/static/lib/ext/lightbox2/js/prototype.js"></script>
+    <script type="text/javascript" src="/static/lib/ext/lightbox2/js/scriptaculous.js?load=effects,builder"></script>
+    <script type="text/javascript" src="/static/lib/ext/lightbox2/js/lightbox.js"></script>
+    <link rel="stylesheet" href="/static/lib/ext/lightbox2/css/lightbox.css" type="text/css" media="screen" />
+    <!---------------------------------------------------------------->
 </head>
 <body>
     <div id="wrap">
