@@ -12,12 +12,14 @@ class HTML:
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
 </head>
 <body>
-    <div id="header"></div>
-    <div id="content">
+    <div id="wrap">
+        <div id="header"></div>
+        <div id="content">
 \n""" % (title))
 
     def footer(self):
         self.response.out.write("""
+        </div>
     </div>
 </body>
 </html>""")
