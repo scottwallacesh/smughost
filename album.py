@@ -45,12 +45,14 @@ class MainHandler(webapp.RequestHandler):
             # Try the video URL
             try:
                 url = imageInfo["Video640URL"]
+                rel = ""
             # Otherwise, just use the photo
             except KeyError:
                 url = imageInfo["MediumURL"]
+                rel = "lightbox[%s]" % albumID
 
             self.response.out.write("""<div class="image">""")
-            self.response.out.write("""<a href="%s" rel="lightbox[x]">""" % (url))
+            self.response.out.write("""<a href="%s" rel="%s">""" % (url, rel))
             self.response.out.write("""<img src="%s" alt="%s" />""" % (imageInfo["TinyURL"], imageInfo["Caption"]))
             self.response.out.write("""</a>""")
             self.response.out.write("""<h3>%s</h3>""" % (imageInfo["Caption"]))
