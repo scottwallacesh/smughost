@@ -16,7 +16,7 @@ class HTML:
     <script type="text/javascript" src="/static/lib/ext/lightbox2/js/scriptaculous.js?load=effects,builder"></script>
     <script type="text/javascript" src="/static/lib/ext/lightbox2/js/lightbox.js"></script>
     <link rel="stylesheet" href="/static/lib/ext/lightbox2/css/lightbox.css" type="text/css" media="screen" />
-    <!---------------------------------------------------------------->
+    <!-- /Lightbox2                                                 -->
 </head>
 <body>
     <div id="wrap">
