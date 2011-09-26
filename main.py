@@ -46,11 +46,7 @@ class MainHandler(webapp.RequestHandler):
          # List the albums.
          for category in categories["Categories"]:
              for album in albums["Albums"]:
-                 count = 0
                  if album["Category"]["id"] == category["id"]:
-                     count += 1
-
-                 if count > 0:
                      self.response.out.write("""<div class="category">""")
                      self.response.out.write("""<a href="/category/%s">""" % (category["id"]))
                      self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&AlbumKey=%s&Size=Thumb" alt="%s" />""" % (prefs.nickname, album["id"], album["Key"], category["NiceName"]))
