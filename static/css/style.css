@@ -1,4 +1,4 @@
-.album, .image {
+.category, .album, .image {
     float: left;
     display: block;
     margin: 1em;
@@ -8,13 +8,13 @@
     overflow: hidden;
 }
 
-.album img, .image img {
+.category img, .album img, .image img {
     display: block;
     margin: 0.5em auto 0.5em auto;
     max-width: 9em;
 }
 
-.album h1, .image h3 {
+.category h1, .album h1, .image h3 {
     font-size: 0.8em;
     margin: 1em;
 }

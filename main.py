@@ -49,7 +49,7 @@ class MainHandler(webapp.RequestHandler):
                  if album["Category"]["id"] == category["id"]:
                      self.response.out.write("""<div class="category">""")
                      self.response.out.write("""<a href="/category/%s">""" % (category["id"]))
-                     self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&AlbumKey=%s&Size=Thumb" alt="%s" />""" % (prefs.nickname, album["id"], album["Key"], category["NiceName"]))
+                     self.response.out.write("""<img src="http://%s.smugmug.com/photos/random.mg?AlbumID=%s&AlbumKey=%s&Size=Tiny" alt="%s" />""" % (prefs.nickname, album["id"], album["Key"], category["NiceName"]))
                      self.response.out.write("""</a>""")
                      self.response.out.write("""<h1>%s</h1>""" % (category["NiceName"]))
                      self.response.out.write("""</div>""")
