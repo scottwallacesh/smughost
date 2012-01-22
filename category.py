@@ -27,7 +27,7 @@ class MainHandler(webapp.RequestHandler):
              self.redirect("/static/unconfig.html")
              return
 
-         html.header()
+         html.header(prefs.title)
  
          # So far, so good.  Try connecting to SmugMug.
          try:

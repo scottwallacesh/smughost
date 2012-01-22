@@ -30,7 +30,7 @@ class MainHandler(webapp.RequestHandler):
              self.redirect("/category/%s" % prefs.category)
              return
 
-         html.header()
+         html.header(prefs.title)
  
          # So far, so good.  Try connecting to SmugMug.
          try:

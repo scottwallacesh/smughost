@@ -12,6 +12,7 @@ class AppPrefs(db.Model):
      nickname = db.StringProperty(default="")
      app_name = db.StringProperty(default="")
      category = db.IntegerProperty(default=0)
+     title = db.StringProperty(default="smughost")
 
      def fetch(self):
          """Function to fetch the application preferences."""
@@ -47,10 +48,12 @@ class PrefHandler(webapp.RequestHandler):
                         <input type="text" id="app_name" name="app_name" value="%s" /> <br/>
                         <label for="category">SmugMug Category</label>
                         <input type="text" id="category" name="category" value="%s" /> <br/>
+                        <label for="title">Site Title</label>
+                        <input type="text" id="title" name="title" value="%s" /> <br/>
 
                         <input type="submit" value="submit" />
                     </form>
-            """ % (prefs.api_key, prefs.nickname, prefs.app_name, prefs.category))
+            """ % (prefs.api_key, prefs.nickname, prefs.app_name, prefs.category, prefs.title))
         html.footer()
 
     def post(self):
@@ -65,6 +68,7 @@ class PrefHandler(webapp.RequestHandler):
             prefs.nickname = self.request.get("nickname")
             prefs.app_name = self.request.get("app_name")
             prefs.category = int(self.request.get("category"))
+            prefs.title = self.request.get("title")
 
             # Push the changes to the DB.
             prefs.put()
